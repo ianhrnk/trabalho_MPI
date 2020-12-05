@@ -11,9 +11,6 @@
 
 #define RAIZ 0
 
-// Imprimir na tela somente o tempo de execução (em segundos, medido com MPI_Wtime)
-// mpirun -oversubscribe -np 10 remove0_par ../Entradas_Saidas/entrada1.txt saida.txt
-
 int* AlocaVetor(int n);
 void RemoveZeros(int n, int *v_in, int *m, int *v_out);
 void CalculaDeslocamento(int *displs, int *recvcounts, int num_proc);

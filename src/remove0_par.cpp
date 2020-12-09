@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
 
   // Processo raiz distribui os elementos do vetor
   MPI_Scatter(v_in, n_itens_proc, MPI_INT, v_in, n_itens_proc, MPI_INT, RAIZ, MPI_COMM_WORLD);
+
   RemoveZeros(n_itens_proc, v_in, &m, v_out);
 
   // Processo raiz recebe o número de elementos restantes de cada processo
@@ -79,8 +80,8 @@ int main(int argc, char *argv[])
   // Processo raiz recebe os elementos restantes dos outros processos
   MPI_Gatherv(v_out, m, MPI_INT, v_out, recvcounts, displs, MPI_INT, RAIZ, MPI_COMM_WORLD);
 
-  // P/ descobrir o número total de elementos restantes
-  MPI_Reduce(&m, &m_restante, 1, MPI_INT, MPI_SUM, RAIZ, MPI_COMM_WORLD);
+  // Número de elementos restantes
+  m_restante = displs[num_proc - 1] + recvcounts[num_proc - 1];
 
   // Fim da medição de tempo
   t_fim = MPI_Wtime();
@@ -97,7 +98,7 @@ int main(int argc, char *argv[])
     {
       saida << m_restante << '\n';
 
-      for (int i = 0; i < n && v_out[i] != 0; ++i)
+      for (int i = 0; i < m_restante; ++i)
         saida << v_out[i] << ' ';
 
       saida << '\n';
